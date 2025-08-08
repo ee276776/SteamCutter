@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"] = "StreamCutter - 音訊影片切割工具";
+}
+
+<!-- 上傳區域 -->
+<div id="upload-section" class="upload-section">
+    <h2><i class="fas fa-cloud-upload-alt"></i> 上傳音訊或影片檔案</h2>
+    <p>支援 MP3、WAV、MP4、AVI 等常見格式，檔案大小限制 100MB</p>
+    
+    <div class="upload-area" id="upload-area">
+        <input type="file" class="file-input" id="file-input" accept="audio/*,video/*">
+        <div class="upload-content">
+            <div class="upload-icon">
+                <i class="fas fa-file-upload"></i>
+            </div>
+            <div class="upload-text">點擊選擇檔案或拖拽檔案到此處</div>
+            <div class="upload-hint">支援音訊和影片檔案</div>
+        </div>
+    </div>
+</div>
+
+<!-- 處理區域 -->
+<div id="processing-section" class="processing-section">
+    <!-- 檔案資訊 -->
+    <div class="file-info">
+        <h3><i class="fas fa-file-audio"></i> 檔案資訊</h3>
+        <div class="file-details" id="file-details">
+            <!-- JavaScript 會動態填入檔案資訊 -->
+        </div>
+    </div>
+
+    <!-- 媒體播放器 -->
+    <div class="media-player">
+        <audio id="audio-player" class="media-element" controls style="display: none;">
+            您的瀏覽器不支援音訊播放
+        </audio>
+        <video id="video-player" class="media-element" controls style="display: none;">
+            您的瀏覽器不支援影片播放
+        </video>
+    </div>
+
+    <!-- 時間軸切割 -->
+    <div class="timeline-section">
+        <div class="timeline-header">
+            <h4><i class="fas fa-scissors"></i> 選擇切割區間</h4>
+            <div class="duration-info">總長度：<span id="total-duration">00:00</span></div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-track" id="timeline-track">
+                <div class="timeline-progress" id="timeline-progress"></div>
+                <div class="timeline-handle start-handle" id="start-handle"></div>
+                <div class="timeline-handle end-handle" id="end-handle"></div>
+            </div>
+        </div>
+
+        <!-- 時間輸入 -->
+        <div class="time-inputs">
+            <div class="time-input-group">
+                <label><i class="fas fa-play"></i> 開始時間</label>
+                <input type="text" class="time-input" id="start-time" placeholder="00:00:00" readonly>
+            </div>
+            <div class="time-input-group">
+                <label><i class="fas fa-stop"></i> 結束時間</label>
+                <input type="text" class="time-input" id="end-time" placeholder="00:00:00" readonly>
+            </div>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" id="preview-btn">
+                <i class="fas fa-play"></i> 預覽片段
+            </button>
+            <button class="btn btn-success" id="cut-btn">
+                <i class="fas fa-cut"></i> 開始裁切
+            </button>
+            <button class="btn btn-secondary" id="reset-btn">
+                <i class="fas fa-redo"></i> 重新上傳
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 載入中 -->
+<div id="loading" class="loading">
+    <div class="loading-spinner"></div>
+    <p>正在處理您的檔案，請稍候...</p>
+</div>
+
+@section Scripts {
+    <script src="~/js/index.js"></script>
+}

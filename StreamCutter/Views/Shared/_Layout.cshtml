@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - StreamCutter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
+    <link href="~/css/layout.css" rel="stylesheet">
+    <link href="~/css/components.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <i class="fas fa-cut"></i>
+                    StreamCutter
+                </a>
+                <div class="nav-info">
+                    <i class="fas fa-info-circle"></i>
+                    免登入音訊影片切割工具
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="content-card fade-in-up">
+                <!-- 主要內容區域會由各個頁面填入 -->
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 StreamCutter. 所有檔案處理完成後自動刪除，不保留任何資料。</p>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js"></script>
+    <script src="~/js/layout.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
