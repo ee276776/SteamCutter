@@ -45,13 +45,13 @@ namespace StreamCutter.Controllers
 
                 if (result.Success && !string.IsNullOrEmpty(result.FilePath))
                 {
-                    // 讀取處理後的檔案
+                    // 讀取檔案
                     var fileBytes = await System.IO.File.ReadAllBytesAsync(result.FilePath);
                     
-                    // 設定 Content-Type
+                    // 設定Content-Type
                     var contentType = GetContentType(result.FileName!);
                     
-                    // 刪除暫存檔案
+                    // 刪除切割後的暫存檔
                     if (System.IO.File.Exists(result.FilePath))
                     {
                         System.IO.File.Delete(result.FilePath);

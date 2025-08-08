@@ -1,18 +1,18 @@
 # Dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-# 安裝 FFmpeg
+# 安裝 FFmpeg 和 wget
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    apt-get install -y ffmpeg wget && \
     rm -rf /var/lib/apt/lists/*
 
 # 建立暫存目錄
 RUN mkdir -p /app/temp
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["StreamCutter.csproj", "."]
 RUN dotnet restore "./StreamCutter.csproj"
@@ -26,6 +26,10 @@ RUN dotnet publish "StreamCutter.csproj" -c Release -o /app/publish /p:UseAppHos
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# 設定環境變數
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:80
 
 # 設定權限
 RUN chmod 755 /app/temp

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  streamcutter:
+    build: .
+    container_name: streamcutter-app
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      # 暫存檔案目錄 - 容器重啟時會自動清除
+      - temp_storage:/app/temp
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "com.streamcutter.description=StreamCutter Media Processing Service"
+      - "com.streamcutter.version=1.0"
+
+volumes:
+  temp_storage:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=500m,uid=1000

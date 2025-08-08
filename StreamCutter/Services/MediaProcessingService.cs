@@ -34,18 +34,56 @@ namespace StreamCutter.Services
         {
             try
             {
-                if (File.Exists(_config.FFmpegPath))
+                // 如果是完整路徑，檢查檔案是否存在
+                if (Path.IsPathRooted(_config.FFmpegPath))
                 {
-                    _logger.LogInformation($"FFmpeg 路徑確認: {_config.FFmpegPath}");
+                    if (File.Exists(_config.FFmpegPath))
+                    {
+                        _logger.LogInformation($"FFmpeg 路徑確認: {_config.FFmpegPath}");
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"FFmpeg 路徑不存在: {_config.FFmpegPath}");
+                    }
                 }
                 else
                 {
-                    _logger.LogWarning($"FFmpeg 路徑不存在: {_config.FFmpegPath}");
+                    // 如果是命令名稱（如 "ffmpeg"），嘗試執行版本檢查
+                    try
+                    {
+                        var processInfo = new ProcessStartInfo
+                        {
+                            FileName = _config.FFmpegPath,
+                            Arguments = "-version",
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            CreateNoWindow = true
+                        };
+
+                        using var process = Process.Start(processInfo);
+                        if (process != null)
+                        {
+                            process.WaitForExit(5000); // 5 秒timeout
+                            if (process.ExitCode == 0)
+                            {
+                                _logger.LogInformation($"FFmpeg 可用，命令: {_config.FFmpegPath}");
+                            }
+                            else
+                            {
+                                _logger.LogWarning($"FFmpeg 命令執行失敗: {_config.FFmpegPath}");
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        _logger.LogWarning($"無法執行 FFmpeg 命令: {_config.FFmpegPath}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"檢查 FFmpeg 路徑時發生錯誤: {_config.FFmpegPath}");
+                _logger.LogError(ex, $"檢查 FFmpeg 可用性時發生錯誤: {_config.FFmpegPath}");
             }
         }
 
@@ -147,13 +185,6 @@ namespace StreamCutter.Services
         {
             try
             {
-                // 檢查 FFmpeg 是否存在
-                if (!File.Exists(_config.FFmpegPath))
-                {
-                    _logger.LogError($"FFmpeg 執行檔不存在: {_config.FFmpegPath}");
-                    return false;
-                }
-
                 var duration = endTime - startTime;
                 
                 // 格式化時間為 FFmpeg 格式 (HH:MM:SS.fff)

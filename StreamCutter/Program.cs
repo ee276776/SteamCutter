@@ -26,11 +26,12 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    // 移除 HTTPS 相關設定，因為容器只使用 HTTP
+    // app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// 容器環境不使用 HTTPS 重導向
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
